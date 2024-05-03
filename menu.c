@@ -75,8 +75,6 @@ void RemNome(char * nomes){
 
     while(i < tamanho){
         
-    }
-
-    
+    } 
 }
 
