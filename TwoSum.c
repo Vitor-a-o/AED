@@ -13,6 +13,7 @@ int main(){
 
     printf("%d", result[0]);
     printf("%d\n", result[1]);
+    free(result);
     
 }
 
