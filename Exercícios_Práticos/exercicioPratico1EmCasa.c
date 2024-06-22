@@ -19,14 +19,13 @@ int main(){
 }
 
 /*
-=================================================
+================================================
 LemonadeChange
 
     Função para calcular se será possível que 
-    todos os clientes de uma fila, com diferentes 
-    valores de pagamento, conseguirão receber seu
-    adequadamente.
-=================================================
+    todos os clientes de uma fila paguem pela 
+    limanada e recebam seu troco adequadamente.
+================================================
 */
 
 bool LemonadeChange( int* bills, int billsSize ) {

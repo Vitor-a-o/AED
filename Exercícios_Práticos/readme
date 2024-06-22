@@ -2,8 +2,17 @@ Vitor Arriada Oliveira  ##  Turma M5  ##  21/06/2024  ##  Exercício prático 1
 
 LemonadeChange
 
-    Função para calcular se será possível que 
-    todos os clientes de uma fila, com diferentes 
-    valores de pagamento, conseguirão receber seu
-    adequadamente.
+    Dada uma fila com diferentes com valores entre $5, $10 e $20,
+    de pagamentos de clientes que querem comprar uma limonada que 
+    custa $5, fazer uma função para calcular se será possível que 
+    todos os clientes paguem e receberam o troco corretamente.
 
+Casos de teste:
+
+    [5,5,5,10,20]  output: true  esperado: true
+
+    [5,5,10,10,20]  output: false  esperado: false
+
+    [5,5,5,10,10,20,5,20]  output: true  esperado: true
+
+Funcionaram todos os aspectos planejados.
