@@ -1,0 +1,16 @@
+Vitor Arriada Oliveira  ##  Turma M5  ##  21/06/2024  ##  Exercício prático 2
+
+Maximum Score
+
+    Dados dois inteiros x, y  e uma string s, removendo a substring "ab" ganha-se x pontos e
+    removendoa substring "ba" ganha-se y pontos.
+
+Casos de teste:
+
+    s = "cdbcbbaaabab", x = 4, y = 5  output: 19  esperado: 19
+
+    s = "aabbaaxybbaabb", x = 5, y = 4  output: 20  esperado: 20
+
+    s = "abababhhdba", x = 6, y = 3  output: 21  esperado: 21
+
+O código feito em casa funciona sobre todos os aspectos.

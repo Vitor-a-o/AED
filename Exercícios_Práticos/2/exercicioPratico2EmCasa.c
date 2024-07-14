@@ -3,19 +3,27 @@
 #include <string.h>
 #include <stdbool.h>
 
-int maximumGain(char* s, int x, int y);
+int MaximumGain(char* s, int x, int y);
 
 int main(){
     char *s = "cdbcbbaaabab";
     int x = 4;
     int y = 5;
 
-    int result = maximumGain(s, x, y);
+    int result = MaximumGain(s, x, y);
 
     printf("%d\n", result);
 }
 
-int maximumGain( char* s, int x, int y ) {
+/*
+================================================
+
+
+    Função para calcular o score máximo
+================================================
+*/
+
+int MaximumGain( char* s, int x, int y ) {
     int score = 0;
     int tamanho = strlen( s );
     char pilha[ tamanho + 1 ];
