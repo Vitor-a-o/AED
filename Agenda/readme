@@ -1,0 +1,6 @@
+Vitor Arriada Oliveira  ##  Turma M5  ##  21/06/2024  ##  Exercício prático 2
+
+Agenda pBuffer
+
+    Implementação de uma agenda usando somente ponteiros que apontem para o void *pBuffer,
+    proibido usar variáveis.
