@@ -3,14 +3,20 @@
 #include <stdbool.h>
 #include <string.h>
 
-void AdicionarPessoa( void *pBuffer );
-void RemoverPessoa( void *pBuffer );
-void BuscarPessoa( void *pBuffer );
-void ListarPessoas( void *pBuffer );
-void FreeList( void *pBuffer );
+//Globais
+
+void *pBuffer;
+int *menu;
+int *idade;
+
+void AdicionarPessoa();
+void RemoverPessoa();
+void BuscarPessoa();
+void ListarPessoas();
+void FreeList();
 void *InitBuffer();
-void MostrarMenu( void *pBuffer );
-void Sair( void *pBuffer );
+void MostrarMenu();
+void Sair();
 
 /*
 Variaveis do Buffer
@@ -29,10 +35,12 @@ Pessoa
 */
 
 int main(){
-    void *pBuffer = InitBuffer();
-    while( *( ( int * )( ( void ** )pBuffer )[ 6 ] ) != 5 ){
+    pBuffer = InitBuffer();
+    menu = pBuffer + sizeof(void *) * 4;
+    *menu = 0;
+    while( *menu != 5 ){
         MostrarMenu( pBuffer );
-        switch( *( ( int * )( ( void ** )pBuffer )[ 6 ] ) ){
+        switch( *menu ){
             case 1:
                 AdicionarPessoa( pBuffer );
                 break;
@@ -53,7 +61,7 @@ int main(){
     return 0;
 }
 
-void MostrarMenu( void *pBuffer ){
+void MostrarMenu(){
     printf( "===============================\n" );
     printf( "| Para adicionar pessoa ( 1 ) |\n" );
     printf( "| Para remover pessoa   ( 2 ) |\n" );
@@ -61,13 +69,13 @@ void MostrarMenu( void *pBuffer ){
     printf( "| Para listar pessoas   ( 4 ) |\n" );
     printf( "| Para sair             ( 5 ) |\n" );
     printf( "===============================\n" );
-    scanf( "%d", ( ( int * )( ( void ** )pBuffer )[ 6 ] ) );
+    scanf( "%d", menu );
     fflush( stdin );
     return;
 }
 
 void *InitBuffer(){
-    void *pBuffer = malloc( sizeof(void *) * 7 );
+    void *pBuffer = malloc( sizeof( void * ) * 4 + sizeof( int ) );
     if ( pBuffer == NULL ) {
         perror( "Falha ao alocar memória para o buffer" );
         exit( EXIT_FAILURE );
@@ -77,60 +85,40 @@ void *InitBuffer(){
     ( ( void ** )pBuffer )[ 1 ] = NULL; //pLast
     ( ( void ** )pBuffer )[ 2 ] = NULL; //pNew
     ( ( void ** )pBuffer )[ 3 ] = NULL; //pAux
-    ( ( void ** )pBuffer )[ 6 ] = malloc( sizeof( int ) );
-    *( ( int * )( ( void ** )pBuffer )[ 6 ] ) = 0; //menu
-
-    if( ( ( void ** )pBuffer )[ 6 ] == NULL ){
-        perror( "Falha ao alocar memória para int menu" );
-        exit( EXIT_FAILURE );
-    }
 
     return pBuffer;
 }
 
-void AdicionarPessoa( void *pBuffer ){
+void AdicionarPessoa(){
 
-    ( ( void ** )pBuffer )[ 2 ] = malloc( sizeof(void *) * 5 );
+    ( ( void ** )pBuffer )[ 2 ] = malloc( sizeof( void * ) * 2 + sizeof( char ) * 100 + sizeof( int ) );
 
-    if ( ( ( void ** )pBuffer )[ 2 ] == NULL) {
+    if ( ( ( void ** )pBuffer )[ 2 ] == NULL ) {
         perror( "Falha ao alocar memória para nodo" );
         exit( EXIT_FAILURE );
     }
 
-    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] = malloc( sizeof( char ) * 30 ); //nome
-    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ] = malloc( sizeof( char ) * 30 ); //email
-
-    if ( ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] == NULL || ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ] == NULL ) {
-        perror("Falha ao alocar memória para nome e email");
-        exit(EXIT_FAILURE);
-    }
-
-    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 2 ] = malloc( sizeof( int ) ); //idade
-
-    if ( ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 2 ] == NULL ) {
-        perror("Falha ao alocar memória para idade");
-        exit(EXIT_FAILURE);
-    }
+    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] = NULL; //next
+    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ] = NULL; //prev
+    idade = ( ( void ** )pBuffer )[ 2 ] + sizeof( void * ) * 2 + sizeof( char ) * 100; //idade
+    *idade = 0;
 
     printf( "Nome: \n" );
-    scanf( "%s", ( char * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] );
+    scanf( "%s", ( ( char ** )pBuffer )[ 2 ] + sizeof(void *) * 2 ); //nome
     fflush( stdin );
     printf( "\nEmail: \n" );
-    scanf( "%s", ( char * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ] );
+    scanf( "%s", ( ( char ** )pBuffer )[ 2 ] + sizeof(void *) * 2 + sizeof( char ) * 50 ); //email
     fflush( stdin );
     printf( "\nIdade: \n" );
-    scanf( "%d", ( int * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 2 ] );
+    scanf( "%d", idade );
     fflush( stdin );
 
     printf("\n");
     printf( "Pessoa adicionada\n" );
-    printf("Nome: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] );
-    printf("Email: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ]);
-    printf("Idade: %d\n", *( ( int * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 2 ] ));
+    printf("Nome: %s\n", ( ( char ** )pBuffer )[ 2 ] + sizeof(void *) * 2 );
+    printf("Email: %s\n", ( ( char ** )pBuffer )[ 2 ] + sizeof(void *) * 2 + sizeof( char ) * 50 );
+    printf("Idade: %d\n", *idade );
     printf("\n");
-
-    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 3 ] = NULL; //next
-    ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 4 ] = NULL; //prev
 
     if ( ( ( void ** )pBuffer )[ 0 ] == NULL ){ // Se não existir nenhum elemento
         ( ( void ** )pBuffer )[ 1 ] = ( ( void ** )pBuffer )[ 0 ] = ( ( void ** )pBuffer )[ 2 ];
@@ -138,98 +126,116 @@ void AdicionarPessoa( void *pBuffer ){
     }else{
         ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )pBuffer )[ 1 ];
 
-        while( ( ( void ** )pBuffer )[ 3 ] != NULL && strcmp( ( char * )( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ], ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ] ) <= 0 ){
-            ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 4 ];
+        while( ( ( void ** )pBuffer )[ 3 ] != NULL && strcasecmp( ( ( char ** )pBuffer )[ 2 ] + sizeof(void *) * 2, ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 ) <= 0 ){
+            ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 1 ];
         }
 
         if( ( ( void ** )pBuffer )[ 3 ] == NULL ){ // Inserir no inicio
-            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 3 ] = ( ( void ** )pBuffer )[ 0 ];
-            ( ( void ** )( ( void ** )pBuffer )[ 0 ] )[ 4 ] = ( ( void ** )pBuffer )[ 2 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] = ( ( void ** )pBuffer )[ 0 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 0 ] )[ 1 ] = ( ( void ** )pBuffer )[ 2 ];
             ( ( void ** )pBuffer )[ 0 ] = ( ( void ** )pBuffer )[ 2 ];
         }else if( ( ( void ** )pBuffer )[ 3 ] == ( ( void ** )pBuffer )[ 1 ] ){ // Inserir no fim
-            ( ( void ** )( ( void ** )pBuffer )[ 1 ] )[ 3 ] = ( ( void ** )pBuffer )[ 2 ];
-            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 4 ] = ( ( void ** )pBuffer )[ 1 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 1 ] )[ 0 ] = ( ( void ** )pBuffer )[ 2 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ] = ( ( void ** )pBuffer )[ 1 ];
             ( ( void ** )pBuffer )[ 1 ] = ( ( void ** )pBuffer )[ 2 ]; 
         }else{ // Inserir no meio (entre Aux e Aux->next)
-            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 3 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 3 ];
-            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 4 ] = ( ( void ** )pBuffer )[ 3 ];
-            ( ( void ** )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 3 ] )[ 4 ] = ( ( void ** )pBuffer )[ 2 ];
-            ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 3 ] = ( ( void ** )pBuffer )[ 2 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 0 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 2 ] )[ 1 ] = ( ( void ** )pBuffer )[ 3 ];
+            ( ( void ** )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ] )[ 1 ] = ( ( void ** )pBuffer )[ 2 ];
+            ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ] = ( ( void ** )pBuffer )[ 2 ];
         }
     }
     return;
 }
 
-void RemoverPessoa( void *pBuffer ){
+void RemoverPessoa(){
     if( ( ( void ** )pBuffer )[ 0 ] == NULL ){
         printf( "Agenda vazia\n" );
         return;
     }
+
     ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )pBuffer )[ 0 ];
+    idade = ( ( void ** )pBuffer )[ 3 ] + sizeof( void * ) * 2 + sizeof( char ) * 100;
 
     printf( "Pessoa removida\n" );
-    printf("Nome: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ] );
-    printf("Email: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 1 ] );
-    printf("Idade: %d\n", *( ( int * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 2 ] ) );
+    printf("Nome: %s\n", ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 );
+    printf("Email: %s\n", ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 + sizeof( char ) * 50 );
+    printf("Idade: %d\n", *idade );
     printf("\n");
 
-    ( ( void ** )pBuffer )[ 0 ] = ( ( void ** )( ( void ** )pBuffer )[ 0 ] )[ 3 ];
+    ( ( void ** )pBuffer )[ 0 ] = ( ( void ** )( ( void ** )pBuffer )[ 0 ] )[ 0 ];
 
     if( ( ( void ** )pBuffer )[ 0 ] == NULL ){
         ( ( void ** )pBuffer )[ 1 ] = NULL;
     }else{
-        ( ( void ** )( ( void ** )pBuffer )[ 0 ] )[ 4 ] = NULL;
+        ( ( void ** )( ( void ** )pBuffer )[ 0 ] )[ 1 ] = NULL;
     }
-    free(( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ]);
-    free(( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 1 ]);
-    free(( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 2 ]);
     free( ( ( void ** )pBuffer )[ 3 ] );
     return;
 }
 
-void BuscarPessoa( void *pBuffer ){
+void BuscarPessoa(){
     if( ( ( void ** )pBuffer )[ 0 ] == NULL ){
         printf( "Agenda vazia\n" );
         return;
     }
+
+    ( ( void ** )pBuffer )[ 2 ] = malloc(sizeof( char ) * 50 );
+
+    printf( "Nome: \n" );
+    scanf( "%s", ( ( char ** )pBuffer )[ 2 ] );
+    fflush( stdin );
+    printf( "\n" );
+
     ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )pBuffer )[ 0 ];
+
+    while( ( ( void ** )pBuffer )[ 3 ] != NULL && strcasecmp( ( ( char ** )pBuffer )[ 2 ], ( ( char ** )pBuffer )[ 3 ] + sizeof( void * ) * 2 ) != 0 ){
+        ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ];
+    }
+
+    free( ( ( void ** )pBuffer )[ 2 ] );
+
+    if( ( ( void ** )pBuffer )[ 3 ] == NULL ){
+        printf( "Pessoa nao encontrada\n" );
+        return;
+    }
+
+    idade = ( ( void ** )pBuffer )[ 3 ] + sizeof( void * ) * 2 + sizeof( char ) * 100;
+
     printf( "Pessoa encontrada\n" );
-    printf("Nome: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ] );
-    printf("Email: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 1 ] );
-    printf("Idade: %d\n", *( ( int * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 2 ] ) );
+    printf("Nome: %s\n", ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 );
+    printf("Email: %s\n", ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 + sizeof( char ) * 50 );
+    printf("Idade: %d\n", *idade );
     printf("\n");
     return;
 }
 
-void ListarPessoas( void *pBuffer ){
+void ListarPessoas(){
     ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )pBuffer )[ 0 ];
     printf( "Pessoas:\n" );
     while( ( ( void ** )pBuffer )[ 3 ] != NULL ){
-        printf("Nome: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ] );
-        printf("Email: %s\n", ( char * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 1 ] );
-        printf("Idade: %d\n", *( ( int * )( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 2 ] ) );
+        idade = ( ( void ** )pBuffer )[ 3 ] + sizeof( void * ) * 2 + sizeof( char ) * 100;
+        printf("Nome: %s\n", ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 );
+        printf("Email: %s\n", ( ( char ** )pBuffer )[ 3 ] + sizeof(void *) * 2 + sizeof( char ) * 50 );
+        printf("Idade: %d\n", *idade );
         printf("\n");
-        ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 3 ];
+        ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ];
     }
     return;
 }
 
-void FreeList( void *pBuffer ){
+void FreeList(){
     ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )pBuffer )[ 0 ];
     while( ( ( void ** )pBuffer )[ 3 ] != NULL ){
-        ( ( void ** )pBuffer )[ 2 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 3 ];
-        free(( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ]);
-        free(( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 1 ]);
-        free(( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 2 ]);
+        ( ( void ** )pBuffer )[ 2 ] = ( ( void ** )( ( void ** )pBuffer )[ 3 ] )[ 0 ];
         free( ( ( void ** )pBuffer )[ 3 ] );
         ( ( void ** )pBuffer )[ 3 ] = ( ( void ** )pBuffer )[ 2 ];
     }
     return;
 }
 
-void Sair( void *pBuffer ){
+void Sair(){
     FreeList( pBuffer );
-    free( ( ( void ** )pBuffer )[ 6 ] );
     free( ( ( void ** )pBuffer )[ 2 ] );
     free( ( ( void ** )pBuffer )[ 3 ] );
     free( pBuffer );
