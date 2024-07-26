@@ -4,3 +4,5 @@ Agenda pBuffer
 
     Implementação de uma agenda usando somente ponteiros que apontem para o void *pBuffer,
     proibido usar variáveis.
+
+    Obs: Na função buscar não respeita a regra da fila, pois a busca é feita de forma sequencial.
