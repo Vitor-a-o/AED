@@ -1,0 +1,15 @@
+Vitor Arriada Oliveira  ##  Turma M5  ##  11/08/2024  ##  Exercício prático 3
+
+subtreeWithAllDeepest
+
+    Dada uma arvore binária retornar a subarvore com todos os nodos mais profundos
+
+Casos de teste
+
+    4 3 1 2 6 5 8   output: 2   esperado: 2
+
+    4 3 1 2 6 5 8 7   output: 4   esperado: 4
+
+    8 7 4 3 2 5 6 11 10 9 12 13    output:4   esperado: 4
+
+    O código foi feito todo em aula e funciona sobre todos os aspectos
