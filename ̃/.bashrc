@@ -1,0 +1,1 @@
+export PATH=$PATH:/home/vitor/Downloads/DrMemory-Linux-2.3.0-1/bin

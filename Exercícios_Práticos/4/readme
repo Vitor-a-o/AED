@@ -1,0 +1,19 @@
+Vitor Arriada Oliveira  ##  Turma M5  ##  30/08/2024  ##  Exercício prático 4
+    
+Most Profit Assigning Work
+
+    Dados n trabalhos: um array para a dificuldade e um arrei para o redimento
+    do respectivo trabalho, e, n trabalhadores: um array para a abilidade de 
+    cada trabalhador. Retorna o maior rendimento total, sendo que cada trabalhador
+    pode trabalhar em apenas um trabalho e somente em trabalhos em que a dificuldade
+    seja menor ou igual a sua abilidade.
+
+Casos de teste
+
+    dificuldade [2,4,6,8,10]  rendimento [10,20,30,40,50]  trabalhadores [4,5,6,7]
+
+    dificuldade [85,47,57]  rendimento [24,66,99]  trabalhadores [40,25,25]
+
+    dificuldade [85,47,25]  rendimento [24,34,23]  trabalhadores [40,15,35]
+
+O código foi feito todo em aula e funciona sobre todos os aspectos
